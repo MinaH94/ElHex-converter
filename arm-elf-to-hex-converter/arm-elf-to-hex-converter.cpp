@@ -244,7 +244,7 @@ void ArmElf32_ExtractProgramHeaderEntryFromFile(Elf32_Phdr& elfProgramHeader, u3
    /* read the entry */
    elfFileHandle.read((char*)&elfProgramHeader, sizeof(elfProgramHeader));
 
-   std::cout << "physical = " << std::hex << (int)elfProgramHeader.p_vaddr << std::endl;
+   //std::cout << "physical = " << std::hex << (int)elfProgramHeader.p_vaddr << std::endl;
 }
 
 u8 ArmElf32_CheckHeaderValidity(const Elf32_Ehdr& elfFileHeader)
@@ -316,7 +316,6 @@ void IntelHex_WriteElfProgramHeaderEntryToFile(const Elf32_Phdr& elfProgramHeade
 
          segmentMemAddr += HEX_MAX_RECORD_LENGTH;
       }
-
 
       if (elfProgramHeader.p_filesz % HEX_MAX_RECORD_LENGTH) /* if there're some bytes that form a record with size < HEX_MAX_RECORD_LENGTH */
       {
