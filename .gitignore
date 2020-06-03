@@ -50,3 +50,12 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+arm-elf-to-hex-converter/Release/arm-elf-.17CDDD67.tlog/CL.command.1.tlog
+arm-elf-to-hex-converter/Release/arm-elf-.17CDDD67.tlog/CL.read.1.tlog
+arm-elf-to-hex-converter/Release/arm-elf-.17CDDD67.tlog/CL.write.1.tlog
+arm-elf-to-hex-converter/Release/arm-elf-.17CDDD67.tlog/link.command.1.tlog
+arm-elf-to-hex-converter/Release/arm-elf-.17CDDD67.tlog/link.read.1.tlog
+arm-elf-to-hex-converter/Release/arm-elf-.17CDDD67.tlog/link.write.1.tlog
+arm-elf-to-hex-converter/Release/arm-elf-to-hex-converter.log
+Release/elhex-converter.iobj
+Release/elhex-converter.ipdb

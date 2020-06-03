@@ -132,7 +132,7 @@ int main(int argc, char* argv[])
             /* try to open the HEX file */
             hexFileHandle.open(argv[2], std::ios_base::out | std::ios_base::trunc);
 
-            if (elfFileHandle.is_open()) /* if opening the HEX file succeeded */
+            if (hexFileHandle.is_open()) /* if opening the HEX file succeeded */
             {
                /* for each program header entry in the program header table */
                for (u8 i = 0; i < elfFileHeader.e_phnum; i++)
