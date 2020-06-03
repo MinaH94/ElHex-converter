@@ -1,6 +1,9 @@
 # ElHex-converter
 ARM32 executable .Elf to Intel .HEX converter
 
+## How to use
+`elhex-converter.exe "path\to\input elf file" "path\to\output hex file"`
+
 ## References
 ### ELF file format
 [ELF and ABI Standards: Tool Interface Standard (TIS) Portable Formats Specification, version 1.2](https://refspecs.linuxfoundation.org/elf/elf.pdf)
