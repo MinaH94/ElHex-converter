@@ -1,6 +1,9 @@
 # ElHex-converter
 ARM32 executable .Elf to Intel .HEX converter
 
+## How to build
+`g++ arm-elf-to-hex-converter.cpp -o elhex-converter.exe`
+
 ## How to use
 `elhex-converter.exe "path\to\input elf file" "path\to\output hex file"`
 
