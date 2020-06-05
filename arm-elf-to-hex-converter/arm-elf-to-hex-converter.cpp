@@ -1,7 +1,7 @@
 #include <iostream>    /* cout, cerr */
 #include <fstream>     /* ifstream, ofstream */
 #include <cstring>     /* strncmp */
-#include "STD_TYPES.h" /* u8, u16, u32 */
+#include <stdint.h>    /* uint8_t, uint16_t, uint32_t */
 
 
 /* ************ exit codes ************ */
@@ -41,32 +41,32 @@
 typedef struct
 {
    char e_ident[EI_NIDENT]; /* The initial bytes mark the file as an object file and provide machine-independent data with which to decode and interpret the file's contents */
-   u16  e_type;             /* object file type */
-   u16  e_machine;          /* required architecture for an individual file */
-   u32  e_version;          /* object file version */
-   u32  e_entry;            /* virtual address to which the system first transfers control (startup code) */
-   u32  e_phoff;            /* program header table's file offset (in bytes) used in execution model */
-   u32  e_shoff;            /* section header table's file offset (in bytes) used in linking model */
-   u32  e_flags;            /* processor-specific flags associated with the file */
-   u16  e_ehsize;           /* ELF header's size (in bytes) */
-   u16  e_phentsize;        /* the size of one entry in the program header table (in bytes) */
-   u16  e_phnum;            /* number of entries in the program header table */
-   u16  e_shentsize;        /* the size of one entry in the section header table (in bytes) */
-   u16  e_shnum;            /* number of entries in the section header table */
-   u16  e_shstrndx;         /* index of the entry (in section header table) associated with the section name string table */
+   uint16_t  e_type;        /* object file type */
+   uint16_t  e_machine;     /* required architecture for an individual file */
+   uint32_t  e_version;     /* object file version */
+   uint32_t  e_entry;       /* virtual address to which the system first transfers control (startup code) */
+   uint32_t  e_phoff;       /* program header table's file offset (in bytes) used in execution model */
+   uint32_t  e_shoff;       /* section header table's file offset (in bytes) used in linking model */
+   uint32_t  e_flags;       /* processor-specific flags associated with the file */
+   uint16_t  e_ehsize;      /* ELF header's size (in bytes) */
+   uint16_t  e_phentsize;   /* the size of one entry in the program header table (in bytes) */
+   uint16_t  e_phnum;       /* number of entries in the program header table */
+   uint16_t  e_shentsize;   /* the size of one entry in the section header table (in bytes) */
+   uint16_t  e_shnum;       /* number of entries in the section header table */
+   uint16_t  e_shstrndx;    /* index of the entry (in section header table) associated with the section name string table */
 } Elf32_Ehdr;
 
 /* ELF32 program header type */
 typedef struct
 {
-   u32 p_type;   /* what kind of segment this array element describes */
-   u32 p_offset; /* offset from the beginning of the file at which the 1st byte of the segment resides */
-   u32 p_vaddr;  /* virtual address at which the first byte of the segment resides in memory */
-   u32 p_paddr;  /* physical address at which the first byte of the segment resides in memory */
-   u32 p_filesz; /* number of bytes of the segment (in this file) */
-   u32 p_memsz;  /* number of bytes of the segment (in the memory) */
-   u32 p_flags;  /* flags relevant to the segment */
-   u32 p_align;  /* Values 0 and 1 mean that no alignment is required. Otherwise, p_align should be a positive, integral power of 2, and p_addr = p_offset % p_align */
+   uint32_t p_type;   /* what kind of segment this array element describes */
+   uint32_t p_offset; /* offset from the beginning of the file at which the 1st byte of the segment resides */
+   uint32_t p_vaddr;  /* virtual address at which the first byte of the segment resides in memory */
+   uint32_t p_paddr;  /* physical address at which the first byte of the segment resides in memory */
+   uint32_t p_filesz; /* number of bytes of the segment (in this file) */
+   uint32_t p_memsz;  /* number of bytes of the segment (in the memory) */
+   uint32_t p_flags;  /* flags relevant to the segment */
+   uint32_t p_align;  /* Values 0 and 1 mean that no alignment is required. Otherwise, p_align should be a positive, integral power of 2, and p_addr = p_offset % p_align */
 } Elf32_Phdr;
 /* ************************************************** */
 
@@ -85,24 +85,29 @@ typedef struct
 /* HEX record type */
 typedef struct
 {
-   u8  dataLength;
-   u16 addressOffset;
-   u8  type;
-   u8  data[HEX_MAX_RECORD_LENGTH];
-   u8  checksum;
+   uint8_t  dataLength;
+   uint16_t addressOffset;
+   uint8_t  type;
+   uint8_t  data[HEX_MAX_RECORD_LENGTH];
+   uint8_t  checksum;
 } IntelHexRecord_t;
 /* ************************************************** */
 
 
+/* ***************** functions prototypes ***************** */
+/* help page */
 void displayHelpPage(void);
 
+/* ELF file functions */
 void ArmElf32_ExtractHeaderFromFile(Elf32_Ehdr& elfFileHeader, std::ifstream& elfFileHandle);
-void ArmElf32_ExtractProgramHeaderEntryFromFile(Elf32_Phdr& elfProgramHeader, u32 entryNum, const Elf32_Ehdr& elfFileHeader, std::ifstream& elfFileHandle);
-u8 ArmElf32_CheckHeaderValidity(const Elf32_Ehdr& elfFileHeader);
+void ArmElf32_ExtractProgramHeaderEntryFromFile(Elf32_Phdr& elfProgramHeader, uint32_t entryNum, const Elf32_Ehdr& elfFileHeader, std::ifstream& elfFileHandle);
+uint8_t ArmElf32_CheckHeaderValidity(const Elf32_Ehdr& elfFileHeader);
 
+/* HEX file functions */
 void IntelHex_WriteElfProgramHeaderEntryToFile(const Elf32_Phdr& elfProgramHeader, std::ifstream& elfFileHandle, std::ofstream& hexFileHandle);
 void IntelHex_CalcRecordChecksum(IntelHexRecord_t& record);
 void IntelHex_WriteRecordToFile(const IntelHexRecord_t& record, std::ofstream& hexFileHandle);
+/* ******************************************************** */
 
 
 int main(int argc, char* argv[])
@@ -135,7 +140,7 @@ int main(int argc, char* argv[])
             if (hexFileHandle.is_open()) /* if opening the HEX file succeeded */
             {
                /* for each program header entry in the program header table */
-               for (u8 i = 0; i < elfFileHeader.e_phnum; i++)
+               for (uint8_t i = 0; i < elfFileHeader.e_phnum; i++)
                {
                   /* get the program header entry from the ELF file */
                   ArmElf32_ExtractProgramHeaderEntryFromFile(elfProgramHeader, i, elfFileHeader, elfFileHandle);
@@ -145,20 +150,20 @@ int main(int argc, char* argv[])
                }
 
                /* start address (startup code address) record */
-               record.dataLength = 4;
+               record.dataLength    = 4;
                record.addressOffset = 0;
-               record.type = HEX_RECORD_TYPE_START_LINEAR_ADDR;
-               record.data[0] = (u8)((elfFileHeader.e_entry & 0xFF000000) >> 24);
-               record.data[1] = (u8)((elfFileHeader.e_entry & 0x00FF0000) >> 16);
-               record.data[2] = (u8)((elfFileHeader.e_entry & 0x0000FF00) >> 8);
-               record.data[3] = (u8)(elfFileHeader.e_entry & 0x000000FF);
+               record.type          = HEX_RECORD_TYPE_START_LINEAR_ADDR;
+               record.data[0]       = (uint8_t)((elfFileHeader.e_entry & 0xFF000000) >> 24); /* most significant byte */
+               record.data[1]       = (uint8_t)((elfFileHeader.e_entry & 0x00FF0000) >> 16);
+               record.data[2]       = (uint8_t)((elfFileHeader.e_entry & 0x0000FF00) >> 8);
+               record.data[3]       = (uint8_t)(elfFileHeader.e_entry & 0x000000FF);         /* least significant byte */
                IntelHex_CalcRecordChecksum(record);
                IntelHex_WriteRecordToFile(record, hexFileHandle);
 
                /* End Of File record */
-               record.dataLength = 0;
+               record.dataLength    = 0;
                record.addressOffset = 0;
-               record.type = HEX_RECORD_TYPE_EOF;
+               record.type          = HEX_RECORD_TYPE_EOF;
                IntelHex_CalcRecordChecksum(record);
                IntelHex_WriteRecordToFile(record, hexFileHandle);
 
@@ -235,21 +240,19 @@ void ArmElf32_ExtractHeaderFromFile(Elf32_Ehdr& elfFileHeader, std::ifstream& el
    elfFileHandle.read((char*)&elfFileHeader, sizeof(elfFileHeader));
 }
 
-void ArmElf32_ExtractProgramHeaderEntryFromFile(Elf32_Phdr& elfProgramHeader, u32 entryNum, const Elf32_Ehdr& elfFileHeader, std::ifstream& elfFileHandle)
+void ArmElf32_ExtractProgramHeaderEntryFromFile(Elf32_Phdr& elfProgramHeader, uint32_t entryNum, const Elf32_Ehdr& elfFileHeader, std::ifstream& elfFileHandle)
 {
    /* point to the beginning of the program header entry:
-    * program header table offset + n * entry size*/
+    * program header table offset + n * entry size */
    elfFileHandle.seekg(elfFileHeader.e_phoff + entryNum * elfFileHeader.e_phentsize);
 
    /* read the entry */
    elfFileHandle.read((char*)&elfProgramHeader, sizeof(elfProgramHeader));
-
-   //std::cout << "physical = " << std::hex << (int)elfProgramHeader.p_vaddr << std::endl;
 }
 
-u8 ArmElf32_CheckHeaderValidity(const Elf32_Ehdr& elfFileHeader)
+uint8_t ArmElf32_CheckHeaderValidity(const Elf32_Ehdr& elfFileHeader)
 {
-   u8 status;
+   uint8_t status;
 
    if ( (elfFileHeader.e_ident[EI_MAG0] == ELFMAG0)               && /* 1st magic byte */
         (strncmp(&elfFileHeader.e_ident[EI_MAG1], "ELF", 3) == 0) && /* magic string */
@@ -277,56 +280,63 @@ u8 ArmElf32_CheckHeaderValidity(const Elf32_Ehdr& elfFileHeader)
 
 void IntelHex_WriteElfProgramHeaderEntryToFile(const Elf32_Phdr& elfProgramHeader, std::ifstream& elfFileHandle, std::ofstream& hexFileHandle)
 {
-   u16 segmentMemAddr; /* offset in memory */
+   uint16_t segmentMemAddr; /* offset in memory */
    IntelHexRecord_t record; /* represents each record */
 
    if (elfProgramHeader.p_filesz) /* if the segment has a representation in file (has physical bytes that'll be written to flash) */
    {
       /* creaate the extended address (start address) record */
-      record.dataLength = 2;
+      record.dataLength    = 2;
       record.addressOffset = 0;
-      record.type = HEX_RECORD_TYPE_EXTENDED_LINEAR_ADDR;
-      record.data[0] = (u8)((elfProgramHeader.p_paddr & 0xFFFF0000) >> 24);
-      record.data[1] = (u8)((elfProgramHeader.p_paddr & 0xFFFF0000) >> 16);
-
+      record.type          = HEX_RECORD_TYPE_EXTENDED_LINEAR_ADDR;
+      record.data[0]       = (uint8_t)((elfProgramHeader.p_paddr & 0xFFFF0000) >> 24);
+      record.data[1]       = (uint8_t)((elfProgramHeader.p_paddr & 0xFFFF0000) >> 16);
       IntelHex_CalcRecordChecksum(record);
       IntelHex_WriteRecordToFile(record, hexFileHandle);
 
+      /* prepare the non-changing fields foreach record of length = HEX_MAX_RECORD_LENGTH */
       record.dataLength = HEX_MAX_RECORD_LENGTH;
-      record.type = HEX_RECORD_TYPE_DATA;
+      record.type       = HEX_RECORD_TYPE_DATA;
 
       /* the memory offset of each record is the lower 2 bytes of the base memory address */
-      segmentMemAddr = (u16)(elfProgramHeader.p_paddr & 0x0000FFFF);
+      segmentMemAddr = (uint16_t)(elfProgramHeader.p_paddr & 0x0000FFFF);
 
       /* goto the file offset of the data bytes of this program header entry */
       elfFileHandle.seekg(elfProgramHeader.p_offset);
 
       /* foreach record that can have a size = HEX_MAX_RECORD_LENGTH */
-      for (u32 i = 0; i < (elfProgramHeader.p_filesz / HEX_MAX_RECORD_LENGTH); i++)
+      for (uint32_t i = 0; i < (elfProgramHeader.p_filesz / HEX_MAX_RECORD_LENGTH); i++)
       {
+         /* record addres offset = segment truncated address */
          record.addressOffset = segmentMemAddr;
 
-         for (u8 j = 0; j < HEX_MAX_RECORD_LENGTH; j++)
+         /* add the data to the record buffer */
+         for (uint8_t j = 0; j < HEX_MAX_RECORD_LENGTH; j++)
          {
-            record.data[j] = (u8)elfFileHandle.get();
+            record.data[j] = (uint8_t)elfFileHandle.get();
          }
 
+         /* calculate the checksum and write the record to the file */
          IntelHex_CalcRecordChecksum(record);
          IntelHex_WriteRecordToFile(record, hexFileHandle);
 
+         /* since we wrote HEX_MAX_RECORD_LENGTH bytes, then increment the address by that amount */
          segmentMemAddr += HEX_MAX_RECORD_LENGTH;
       }
 
       if (elfProgramHeader.p_filesz % HEX_MAX_RECORD_LENGTH) /* if there're some bytes that form a record with size < HEX_MAX_RECORD_LENGTH */
       {
-         record.dataLength = elfProgramHeader.p_filesz % HEX_MAX_RECORD_LENGTH;
+         /* the length is the remaining amount of bytes that didn't make a complete HEX_MAX_RECORD_LENGTH */
+         record.dataLength    = elfProgramHeader.p_filesz % HEX_MAX_RECORD_LENGTH;
          record.addressOffset = segmentMemAddr;
 
-         for (u8 j = 0; j < record.dataLength; j++)
+         /* add the data to the record buffer */
+         for (uint8_t j = 0; j < record.dataLength; j++)
          {
-            record.data[j] = elfFileHandle.get();
+            record.data[j] = (uint8_t)elfFileHandle.get();
          }
 
+         /* calculate the checksum and write the record to the file */
          IntelHex_CalcRecordChecksum(record);
          IntelHex_WriteRecordToFile(record, hexFileHandle);
       }
@@ -344,22 +354,26 @@ void IntelHex_WriteElfProgramHeaderEntryToFile(const Elf32_Phdr& elfProgramHeade
 void IntelHex_CalcRecordChecksum(IntelHexRecord_t& record)
 {
    /* checksum = ((sum of all record bytes) % 256) * -1 */
-   record.checksum = record.dataLength                          +
-                     (u8)(record.addressOffset & 0x00FF)        +
-                     (u8)((record.addressOffset & 0xFF00) >> 8) +
+
+   /* sum the overhead/header */
+   record.checksum = record.dataLength                               +
+                     (uint8_t)(record.addressOffset & 0x00FF)        +
+                     (uint8_t)((record.addressOffset & 0xFF00) >> 8) +
                      record.type;
 
-   for (u8 i = 0; i < record.dataLength; i++)
+   /* then sum the data bytes */
+   for (uint8_t i = 0; i < record.dataLength; i++)
    {
       record.checksum += record.data[i];
    }
 
+   /* finally multiply by -1  */
    record.checksum *= -1;
 }
 
 void IntelHex_WriteRecordToFile(const IntelHexRecord_t& record, std::ofstream& hexFileHandle)
 {
-   u8 prevFill;
+   uint8_t prevFill;
 
    /* write the colon first */
    hexFileHandle << ':';
@@ -384,7 +398,7 @@ void IntelHex_WriteRecordToFile(const IntelHexRecord_t& record, std::ofstream& h
    hexFileHandle << (int)record.type;
 
    /* write all the data bytes */
-   for (u8 i = 0; i < record.dataLength; i++)
+   for (uint8_t i = 0; i < record.dataLength; i++)
    {
       hexFileHandle.width(sizeof(record.data[0]) * 2);
       hexFileHandle << (int)record.data[i];

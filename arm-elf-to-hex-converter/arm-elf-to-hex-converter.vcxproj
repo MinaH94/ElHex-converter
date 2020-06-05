@@ -149,9 +149,6 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="STD_TYPES.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="arm-elf-to-hex-converter.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
