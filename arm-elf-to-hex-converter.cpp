@@ -1,7 +1,7 @@
 #include <iostream>    /* cout, cerr */
 #include <fstream>     /* ifstream, ofstream */
 #include <cstring>     /* strncmp */
-#include <stdint.h>    /* uint8_t, uint16_t, uint32_t */
+#include <cstdint>     /* uint8_t, uint16_t, uint32_t */
 
 
 /* ************ exit codes ************ */
